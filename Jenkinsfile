@@ -35,12 +35,12 @@ stages {
             echo "test B"
           }
         }
-      post {
-      success {
+        post {
+        success {
         archiveArtifacts artifacts: '**/target/*.war'
-            }
           }
         }
       }
     }
   }
+ }
