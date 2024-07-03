@@ -11,7 +11,7 @@ environment {
   prod = "production env running on prodServer"
 }
 parameters {
-  choice choices: ['dev', 'prod'], name: 'deploy-env'
+  choice choices: ['development', 'production'], name: 'deploy-env'
 }
 
 stages {
@@ -48,13 +48,12 @@ stages {
         }
       }
     }
-  stage('deploy_dev')
-  {
-    when { expression {params.deploy_env == 'dev'}
-    beforeAgent = true
-    }
+  stage('deploy_dev'){
+    when { 
+    expression {params.deploy_env == 'development'}
+    beforeAgent true}
     agent { label 'devServer'}
-    steps{
+    steps {
       dir("/var/www/html")
       {
         unstash "java-hw-app"
