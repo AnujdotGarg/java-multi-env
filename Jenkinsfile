@@ -22,24 +22,25 @@ stages {
     }
   }
   stage('test')
-    {
-      parallel {
-        stage('testA'){
-          steps{
-            echo "test A"
+  {
+    parallel {
+      stage('testA'){
+        steps{
+          echo "test A"
+        }
+      }
+      stage('testB'){
+        steps{
+          echo "test B"
           }
         }
-        stage('testB'){
-          steps{
-            echo "test B"
-          }
-        }
-        post {
-        success {
-        archiveArtifacts artifacts: '**/target/*.war'
-          }
+      }
+    post {
+    success {
+      archiveArtifacts artifacts: '**/target/*.war'
         }
       }
     }
   }
- }
+}
+ 
