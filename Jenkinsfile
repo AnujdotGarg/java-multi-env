@@ -25,14 +25,14 @@ stages {
   {
     parallel {
       stage('testA'){
-        agent { label 'devServer' }
+        agent any
         steps{
           echo "test A"
           sh 'mvn test'
         }
       }
       stage('testB'){
-        agent { label 'prodServer'}
+        agent any
         steps{
           echo "test B"
           sh 'mvn test'
