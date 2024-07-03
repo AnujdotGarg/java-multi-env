@@ -11,36 +11,59 @@ environment {
   prod = "production env running on prodServer"
 }
 parameters {
-  choice choices: ['Development', 'Production'], name: 'deploy-env'
+  choice choices: ['dev', 'prod'], name: 'deploy-env'
 }
 
 stages {
   stage('build') {
     steps {
-        sh 'mvn clean package'
+        sh 'mvn clean package DskipTest=true'
         echo "$dev"
     }
   }
   stage('test')
   {
     parallel {
+      agent { label 'devServer' }
       stage('testA'){
         steps{
           echo "test A"
+          sh 'mvn test'
         }
       }
       stage('testB'){
+        agent { label 'prodServer'}
         steps{
           echo "test B"
+          sh 'mvn test'
           }
         }
       }
     post {
     success {
-      archiveArtifacts artifacts: '**/target/*.war'
+      dir("webapp/target/")
+      {
+      stash name: "java-hw-app", includes: "*.war"
+          }
         }
       }
     }
+  stage('deploy_dev')
+  {
+    when { expression {params.deploy_env == 'dev'}
+    beforeAgent = true
+    }
+    agent { label 'devServer'}
+    steps{
+      dir("/var/www/html")
+      {
+        unstash "java-hw-app"
+      }
+      sh """
+      cd /var/www/html
+      jar -xvf webapp.war
+      """
+      }
+    }  
   }
 }
- 
