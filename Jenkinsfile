@@ -20,11 +20,10 @@ stages {
         sh 'mvn clean package'
         echo "$dev"
     }
-
-        }
-    stage('test')
+  }
+  stage('test')
     {
-      parallel{
+      parallel {
         stage('testA'){
           steps{
             echo "test A"
